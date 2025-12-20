@@ -27,7 +27,8 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
 use App\Http\Controllers\UploadController;
-Route::middleware('auth:sanctum')->post('/upload', [UploadController::class, 'store']);
+use App\Http\Controllers\CapsuleController;
+
 
 use App\Http\Controllers\PostController;
 
@@ -40,5 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Social Graph Routes ---
     Route::get('/feed', [PostController::class, 'index']); // The Geo-Feed
     Route::post('/posts', [PostController::class, 'store']); // Create Post
+    Route::post('/upload', [UploadController::class, 'store']);
+
+    // Gamification Routes (Capsules)
+    Route::get('/capsules', [CapsuleController::class, 'index']);
+    Route::post('/capsules', [CapsuleController::class, 'store']);
+    Route::post('/capsules/{capsule}/collect', [CapsuleController::class, 'collect']);
     Route::post('/posts/{id}/like', [PostController::class, 'toggleLike']); // Like/Unlike
 });

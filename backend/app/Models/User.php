@@ -72,4 +72,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
     }
+
+    // Gamification Relationships
+    public function createdCapsules()
+    {
+        return $this->hasMany(Capsule::class, 'user_id');
+    }
+
+    public function collectedCapsules()
+    {
+        return $this->hasMany(Capsule::class, 'collected_by');
+    }
 }
