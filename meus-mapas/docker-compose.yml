@@ -1,0 +1,66 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    image: aurora-maps-backend
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    container_name: aurora-maps-backend
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - aurora-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    extra_hosts:
+      - "aws-0-sa-east-1.pooler.supabase.com:54.94.90.106"
+    ports:
+      - "8080:8000"
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    image: aurora-maps-frontend
+    container_name: aurora-maps-frontend
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - aurora-network
+    depends_on:
+      - app
+
+  db:
+    image: postgres:15-alpine
+    container_name: aurora-maps-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aurora_maps
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - aurora-network
+
+networks:
+  aurora-network:
+    driver: bridge
+
+volumes:
+  db-data:

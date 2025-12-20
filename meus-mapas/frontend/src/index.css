@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Colors - TRUE AURORA BOREALIS THEME */
+  --color-dark: #020617;
+  /* Slate 950 - Update to Deepest Blue/Black */
+  --color-dark-lighter: #0f172a;
+  /* Slate 900 */
+  --color-dark-card: rgba(2, 6, 23, 0.5);
+  /* Transparent Dark */
+
+  /* Primary is now a bright Cyan/Green mix */
+  --color-primary: #22d3ee;
+  /* Cyan 400 */
+  --color-primary-hover: #0891b2;
+  --color-primary-light: #67e8f9;
+
+  /* Secondary is Emerald Green */
+  --color-secondary: #34d399;
+  /* Emerald 400 */
+  --color-secondary-hover: #059669;
+
+  /* Accent Colors */
+  --color-aurora-pink: #d946ef;
+  /* Fuchsia 500 */
+  --color-aurora-green: #34d399;
+  /* Emerald 400 */
+  --color-aurora-purple: #818cf8;
+  /* Indigo 400 */
+
+  --color-text: #f8fafc;
+  /* Slate 50 */
+  --color-text-muted: #94a3b8;
+  /* Slate 400 */
+
+  --color-border: rgba(148, 163, 184, 0.1);
+  --color-danger: #ef4444;
+
+  /* Fonts */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Poppins', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Animations */
+  --animate-fade-in-up: fadeInUp 0.5s ease-out forwards;
+  --animate-slide-in-left: slideInLeft 0.5s ease-out forwards;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-float-medium: float 6s ease-in-out infinite;
+  --animate-float-fast: float 4s ease-in-out infinite;
+  --animate-aurora-wave: auroraWave 10s ease-in-out infinite alternate;
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -30px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  @keyframes aurora-wave-1 {
+    0% {
+      transform: translateX(-10%) skewX(-10deg);
+    }
+
+    50% {
+      transform: translateX(10%) skewX(-20deg);
+    }
+
+    100% {
+      transform: translateX(-10%) skewX(-10deg);
+    }
+  }
+
+  @keyframes aurora-wave-2 {
+    0% {
+      transform: translateX(10%) skewX(10deg);
+    }
+
+    50% {
+      transform: translateX(-10%) skewX(20deg);
+    }
+
+    100% {
+      transform: translateX(10%) skewX(10deg);
+    }
+  }
+
+  @keyframes twinkle {
+
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: scale(0.8);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+}
+
+/* Global Styles */
+:root {
+  /* Dynamic Theme Variables */
+  --bg-color: #f8fafc;
+  /* Slate 50 (Light) */
+  --text-color: #0f172a;
+  /* Slate 900 (Light) */
+
+  /* Glassmorphism Vars (CSS variables for manual usage) */
+  --card: rgba(255, 255, 255, 0.7);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.08);
+  --muted: rgba(255, 255, 255, 0.5);
+}
+
+.dark {
+  --bg-color: var(--color-dark);
+  --text-color: var(--color-text);
+
+  /* Glassmorphism Vars (Dark) */
+  --card: rgba(30, 41, 82, 0.4);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.08);
+  --muted: rgba(255, 255, 255, 0.5);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+  }
+
+  .glass-card:hover {
+    background: rgba(30, 41, 82, 0.5);
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Leaflet Overrides */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background-color: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: rgba(255, 255, 255, 0.5);
+  top: 8px;
+  right: 8px;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: white;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-lighter);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Custom Map Markers (Neon Pulse) */
+.custom-marker-pin {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background: none !important;
+}
+
+.marker-dot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+  position: relative;
+  z-index: 2;
+  border: 2px solid white;
+}
+
+.marker-glow {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: rgba(124, 58, 237, 0.4);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
