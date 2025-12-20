@@ -24,6 +24,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        if (!User::where('email', 'recruiter@aurora.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Recrutador Aurora',
+                'email' => 'recruiter@aurora.com',
+            ]);
+        }
+
         $this->call(MegaSeeder::class);
     }
 }

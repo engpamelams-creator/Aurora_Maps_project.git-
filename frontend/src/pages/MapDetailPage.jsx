@@ -21,6 +21,11 @@ const createCustomIcon = () => {
     });
 };
 
+import { useGeofencing } from '@/hooks/useGeofencing';
+import { CapsuleMarker } from '@/components/CapsuleMarker';
+import { capsuleService } from '@/services/capsuleService';
+import { Toaster, toast } from 'react-hot-toast'; // Assuming usage
+
 const LocationMarker = ({ onLocationSelected }) => {
     useMapEvents({
         click(e) {
@@ -43,10 +48,45 @@ const MapDetailPage = () => {
     const [editingPointId, setEditingPointId] = useState(null);
     const [editName, setEditName] = useState('');
 
-    // --- Route Generator State ---
     const [routeModalOpen, setRouteModalOpen] = useState(false);
     const [generatedRoute, setGeneratedRoute] = useState(null);
     const [availableTime, setAvailableTime] = useState('2h'); // 2h, 4h, Day
+
+    // --- Gamification State ---
+    const [capsules, setCapsules] = useState([]);
+    const { userLocation, isWithinRange } = useGeofencing();
+
+    // Fetch Capsules when map loads (or user moves)
+    useEffect(() => {
+        if (map && map.center) {
+            // Mock or initial fetch
+            loadCapsules(map.center.latitude || -15.7942, map.center.longitude || -47.8822);
+        }
+    }, [map]);
+
+    const loadCapsules = async (lat, lng) => {
+        try {
+            const data = await capsuleService.getAll(lat, lng);
+            setCapsules(data);
+        } catch (error) {
+            console.error("Failed to load drops:", error);
+        }
+    };
+
+    const handleCollectCapsule = async (id) => {
+        if (!userLocation) {
+            toast.error("Precisamos da sua localização!");
+            return;
+        }
+        try {
+            const result = await capsuleService.collect(id, userLocation.latitude, userLocation.longitude);
+            toast.success(`🎉 ${result.message} (+${result.xp_earned} XP)`);
+            // Refresh capsules
+            setCapsules(prev => prev.map(c => c.id === id ? { ...c, is_collected: true } : c));
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Erro ao coletar via satélite.");
+        }
+    };
 
     useEffect(() => {
         fetchMapData();
@@ -161,6 +201,7 @@ const MapDetailPage = () => {
             </div>
         </div>
     );
+
 
     if (!map) return null;
 
@@ -402,6 +443,21 @@ const MapDetailPage = () => {
                                 </Popup>
                             </Marker>
                         ))}
+
+                        {/* Render Digital Drops (Capsules) */}
+                        {capsules.map(capsule => (
+                            !capsule.is_collected && (
+                                <CapsuleMarker
+                                    key={`capsule-${capsule.id}`}
+                                    capsule={{
+                                        ...capsule,
+                                        distance: userLocation ? L.latLng(userLocation.latitude, userLocation.longitude).distanceTo([capsule.latitude, capsule.longitude]) : 9999
+                                    }}
+                                    isCollectable={isWithinRange(capsule.latitude, capsule.longitude, 20)}
+                                    onCollect={handleCollectCapsule}
+                                />
+                            )
+                        ))}
                     </AuroraMap>
 
                     {/* Floating Info */}
@@ -495,6 +551,14 @@ const MapDetailPage = () => {
                     </div>
                 )}
             </AnimatePresence>
+
+            <Toaster position="top-center" toastOptions={{
+                style: {
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1px solid #334155'
+                }
+            }} />
         </div>
     );
 };

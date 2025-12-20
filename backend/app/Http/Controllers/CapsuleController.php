@@ -24,6 +24,10 @@ class CapsuleController extends Controller
 
         $capsule = Auth::user()->createdCapsules()->create($validated);
 
+        if ($capsule->image_url) {
+            \App\Jobs\ProcessCapsuleImage::dispatch($capsule);
+        }
+
         return response()->json($capsule, 201);
     }
 
@@ -42,13 +46,12 @@ class CapsuleController extends Controller
         }
 
         // Haversine Formula: 6371 * acos(...)
+        $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+
         $capsules = Capsule::select('*')
-            ->selectRaw(
-                '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
-                [$lat, $lng, $lat]
-            )
+            ->selectRaw("{$haversine} AS distance", [$lat, $lng, $lat])
             ->where('is_collected', false)
-            ->having('distance', '<', $radius / 1000) // Convert meters to km
+            ->whereRaw("{$haversine} < ?", [$lat, $lng, $lat, $radius / 1000]) // Repeat formula for filtering
             ->orderBy('distance')
             ->limit(50)
             ->get();
