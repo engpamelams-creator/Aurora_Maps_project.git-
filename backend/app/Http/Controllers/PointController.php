@@ -23,6 +23,11 @@ class PointController extends Controller
 
     public function update(Request $request, Point $point)
     {
+        // IDOR Protection
+        if ($request->user()->cannot('update', $point)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
@@ -34,6 +39,11 @@ class PointController extends Controller
 
     public function destroy(Point $point)
     {
+        // IDOR Protection
+        if (request()->user()->cannot('delete', $point)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $point->delete();
 
         return response()->noContent();

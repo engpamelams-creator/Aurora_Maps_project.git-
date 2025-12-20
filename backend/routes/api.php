@@ -26,6 +26,9 @@ use App\Http\Controllers\AuthController;
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
+use App\Http\Controllers\UploadController;
+Route::middleware('auth:sanctum')->post('/upload', [UploadController::class, 'store']);
+
 use App\Http\Controllers\PostController;
 
 Route::middleware('auth:sanctum')->group(function () {
