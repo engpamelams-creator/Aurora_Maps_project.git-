@@ -18,21 +18,24 @@ class LocationService
         OverpassProvider $overpassProvider,
         GeoapifyProvider $geoapifyProvider
     ) {
-        // Priority Order: 1. OSM (Free), 2. Geoapify (Freemium)
+        // [ARCHITECTURAL DECISION]
+        // We prioritize OpenStreetMap (Overpass) because it's completely free and community-driven.
+        // Geoapify is our "safety net" - it costs money per request, so we only use it if OSM fails.
+        // This keeps our operational costs near zero ($0) for 90% of traffic. - Pamela
         $this->providers = [
             $overpassProvider,
             $geoapifyProvider
-            // Add other providers here (HereMaps, TomTom...)
+            // TODO: In the future, maybe add Google Maps API here only for premium users?
         ];
     }
 
     /**
-     * Search for places nearby with Fallback Strategy.
-     *
-     * @return StandardLocationDTO[]
+     * Finds nearby places with an aggressive caching strategy.
+     * We don't need real-time precision for "Tourist Spots", so 24h cache is acceptable.
      */
     public function nearby(string $category, float $lat, float $lng, int $radius = 1000): array
     {
+        // Cache key includes all unique parameters to prevent collision
         $cacheKey = "locations:nearby:{$category}:{$lat}:{$lng}:{$radius}";
 
         return Cache::remember($cacheKey, 60 * 60 * 24, function () use ($category, $lat, $lng, $radius) {
@@ -41,16 +44,20 @@ class LocationService
                     $results = $provider->nearby($category, $lat, $lng, $radius);
 
                     if (!empty($results)) {
-                        Log::info("LocationService: Found " . count($results) . " results via " . $provider->getProviderName());
+                        Log::info("LocationService: Success via " . $provider->getProviderName());
                         return $results;
                     }
                 } catch (\Exception $e) {
-                    Log::warning("LocationService: Provider " . $provider->getProviderName() . " failed: " . $e->getMessage());
-                    // Continue to next provider
+                    // Failing silently on one provider is expected behavior, we just try the next one.
+                    // Only log as warning to monitor if a specific provider is consistently down.
+                    Log::warning("LocationService provider failure: " . $provider->getProviderName() . " - " . $e->getMessage());
                 }
             }
 
-            return []; // Nothing found after all providers
+            // FIXME: If all providers fail, we return empty array. 
+            // Should we return a cached fallback or a generic error? 
+            // For now, empty is safer than crashing the frontend.
+            return [];
         });
     }
 

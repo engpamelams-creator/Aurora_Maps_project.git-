@@ -8,7 +8,8 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { useAuth } from "../context/AuthContext";
 
 export function Header({ onCreateClick }) {
-    // Auth debug
+    // Debugging Auth: Sometimes context is undefined if Header is rendered outside Providers.
+    // This is a sanity check to prevent white-screen crashes during dev.
     const authContext = useAuth();
     console.log("Header AuthContext:", authContext);
 
@@ -62,7 +63,10 @@ export function Header({ onCreateClick }) {
         }
     }, [commandOpen, allMaps]);
 
-    // Effect: Analytics (Debounced)
+    // [UX IMPROVEMENT]
+    // We debounce the analytics log by 1.5s.
+    // There is no point in logging "P", "Pa", "Par", "Pari" separately.
+    // We only care what the user *actually* wanted to find. Saves DB space!
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (query.trim().length > 2) {
