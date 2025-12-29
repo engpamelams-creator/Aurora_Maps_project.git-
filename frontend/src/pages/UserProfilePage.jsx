@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    User, Mail, Lock, Save, Trash2, ArrowLeft, Loader2, AlertTriangle,
-    Map as MapIcon, Globe, Trophy, Star, Settings, Camera, Activity, Calendar,
-    TrendingUp, Award, Zap, Share2
+    Save, Camera, Activity, Calendar, Zap, Loader2
+} from 'lucide-react';
+import {
+    Map as MapIcon, Globe, Trophy, Star, Settings, Award
 } from 'lucide-react';
 import Feed from '../components/Feed';
 
 const UserProfilePage = () => {
-    const { user, updateProfile, updateAvatar, deleteAccount, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user, updateProfile, updateAvatar } = useAuth();
     const [activeTab, setActiveTab] = useState('overview'); // overview, trips, badges, settings
     const fileInputRef = useRef(null);
     const [avatarPreview, setAvatarPreview] = useState(null);
@@ -20,7 +19,6 @@ const UserProfilePage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', password_confirmation: '' });
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
-    const [confirmDelete, setConfirmDelete] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -57,18 +55,10 @@ const UserProfilePage = () => {
             setStatus({ type: 'success', message: 'Perfil atualizado com sucesso!' });
             setFormData(prev => ({ ...prev, password: '', password_confirmation: '' }));
         } catch (err) {
+            console.error(err);
             setStatus({ type: 'error', message: err.response?.data?.message || 'Erro ao atualizar perfil.' });
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleDelete = async () => {
-        try {
-            await deleteAccount();
-            navigate('/');
-        } catch (err) {
-            setStatus({ type: 'error', message: 'Erro ao excluir conta.' });
         }
     };
 

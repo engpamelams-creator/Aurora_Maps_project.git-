@@ -7,6 +7,10 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/ping', function () {
+    return 'pong';
+});
+
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\PointController;
 
@@ -48,4 +52,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/capsules', [CapsuleController::class, 'store']);
     Route::post('/capsules/{capsule}/collect', [CapsuleController::class, 'collect']);
     Route::post('/posts/{id}/like', [PostController::class, 'toggleLike']); // Like/Unlike
+});
+
+// --- Location Module (Sênior Implementation) ---
+use App\Http\Controllers\LocationController;
+
+Route::middleware('auth:sanctum')->prefix('locations')->group(function () {
+    Route::get('/nearby', [LocationController::class, 'nearby']);
+    Route::get('/search', [LocationController::class, 'search']);
 });

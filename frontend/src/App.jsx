@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from 'rea
 import { BackgroundWrapper } from './components/BackgroundWrapper';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Loading } from './components/Loading';
 
@@ -21,19 +20,14 @@ const GeoFeedPage = React.lazy(() => import('./pages/GeoFeedPage'));
 const NearbyGroupsPage = React.lazy(() => import('./pages/NearbyGroupsPage'));
 const LocalEventsPage = React.lazy(() => import('./pages/LocalEventsPage'));
 
-// Fallback skeleton
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
-  </div>
-);
-
 // Protected Route Component
 const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return null; // Or a spinner
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
+
+import { AIChatWidget } from './components/AIChatWidget';
 
 // Layout Component handling transitions
 const Layout = () => {
@@ -56,40 +50,45 @@ const Layout = () => {
         </div>
         <Footer />
       </div>
+      <AIChatWidget />
     </>
   );
 };
+
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <BackgroundWrapper>
-          <Suspense fallback={<Loading />}>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<MapListPage />} />
-                <Route path="/map/:id" element={<MapDetailPage />} />
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/feed" element={<GeoFeedPage />} />
-                  <Route path="/groups" element={<NearbyGroupsPage />} />
-                  <Route path="/events" element={<LocalEventsPage />} />
-                  <Route path="/profile" element={<UserProfilePage />} />
-                  <Route path="/my-maps" element={<MyMapsPage />} />
-                  <Route path="/favorites" element={<FavoritesPage />} />
-                  <Route path="/gallery" element={<GalleryPage />} />
-                  <Route path="/recommendations" element={<RecommendationsPage />} />
+        <ErrorBoundary>
+          <BackgroundWrapper>
+            <Suspense fallback={<Loading />}>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<MapListPage />} />
+                  <Route path="/map/:id" element={<MapDetailPage />} />
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="/pulse" element={<GeoFeedPage />} />
+                    <Route path="/groups" element={<NearbyGroupsPage />} />
+                    <Route path="/events" element={<LocalEventsPage />} />
+                    <Route path="/profile" element={<UserProfilePage />} />
+                    <Route path="/my-maps" element={<MyMapsPage />} />
+                    <Route path="/favorites" element={<FavoritesPage />} />
+                    <Route path="/gallery" element={<GalleryPage />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Auth Routes (No Header) */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+                {/* Auth Routes (No Header) */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
-        </BackgroundWrapper>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </BackgroundWrapper>
+        </ErrorBoundary>
       </AuthProvider>
     </BrowserRouter>
   );

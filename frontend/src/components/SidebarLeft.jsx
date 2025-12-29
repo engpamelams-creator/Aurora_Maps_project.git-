@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Map, Users, Calendar, Settings, Compass } from 'lucide-react';
+import { User, Map, Users, Calendar, Settings, Compass, Activity } from 'lucide-react';
 import { WeatherWidget } from './WeatherWidget';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -7,12 +7,12 @@ import { useAuth } from '../context/AuthContext';
 const NavItem = ({ icon: Icon, label, to = "#", active }) => (
     <Link
         to={to}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${active
-            ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-            : 'text-slate-400 hover:bg-white/5 hover:text-white hover:border hover:border-white/5'
-            }`}
+        className={`flex items - center gap - 3 px - 4 py - 3 rounded - xl transition - all duration - 300 group ${active
+                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white hover:border hover:border-white/5'
+            } `}
     >
-        <Icon size={20} className={`transition-transform duration-300 group-hover:scale-110 ${active ? 'fill-cyan-500/20' : ''}`} />
+        <Icon size={20} className={`transition - transform duration - 300 group - hover: scale - 110 ${active ? 'fill-cyan-500/20' : ''} `} />
         <span className="font-medium">{label}</span>
     </Link>
 );
@@ -44,7 +44,12 @@ export const SidebarLeft = () => {
                     </Link>
                 </div>
                 {/* <NavItem icon={User} label={userName} to="/profile" /> Removed generic User item in favor of custom Avatar item */}
-                <NavItem icon={Compass} label="Geo-Feed" to="/feed" />
+                <NavItem
+                    icon={Activity}
+                    label="Pulse"
+                    to="/pulse"
+                    className={({ isActive }) => isActive ? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" : ""}
+                />
                 <NavItem icon={Map} label="Explorar Mapa" to="/" />
                 <NavItem icon={Users} label="Grupos Próximos" to="/groups" />
                 <NavItem icon={Calendar} label="Eventos Locais" to="/events" />

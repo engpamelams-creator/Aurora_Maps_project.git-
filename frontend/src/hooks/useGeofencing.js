@@ -10,7 +10,7 @@ export const useGeofencing = () => {
 
     useEffect(() => {
         if (!navigator.geolocation) {
-            setError("Geolocation not supported");
+            setTimeout(() => setError("Geolocation not supported"), 0);
             return;
         }
 

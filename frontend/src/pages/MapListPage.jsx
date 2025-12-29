@@ -6,12 +6,12 @@ import { MapSkeleton } from '../components/MapSkeleton'; // Added Skeleton
 import { KPIGrid } from '../components/KPIGrid';
 import { WeatherWidget } from '../components/WeatherWidget';
 import { AuroraBackground } from '../components/AuroraBackground';
-import { Loader2, X, AlertOctagon, RefreshCw } from 'lucide-react';
+import { X, AlertOctagon, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MapListPage = () => {
     const { searchTerm } = useOutletContext() || { searchTerm: '' };
-    const { maps, loading: isLoading, error: errorState, fetchMaps, createMap } = useMaps(); // Renamed to match existing usage or update below
+    const { maps, loading: isLoading, error: errorState, createMap } = useMaps(); // Renamed to match existing usage or update below
     const [newMapName, setNewMapName] = useState('');
     const [isCreatingMap, setIsCreatingMap] = useState(false);
 

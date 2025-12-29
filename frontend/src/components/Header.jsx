@@ -157,11 +157,11 @@ export function Header({ onCreateClick }) {
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => navigate('/feed')}
+                            onClick={() => navigate('/pulse')}
                             className="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-white font-medium hover:bg-slate-700 hover:text-cyan-400 transition-colors border border-white/5"
                         >
                             <Activity size={18} />
-                            <span>Geo-Feed</span>
+                            <span>Pulse</span>
                         </motion.button>
 
                         <motion.button

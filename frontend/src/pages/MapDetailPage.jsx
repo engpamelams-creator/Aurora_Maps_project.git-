@@ -7,8 +7,11 @@ import { ArrowLeft, Trash2, Edit2, Save, X, MapPin, Wand2, Clock } from 'lucide-
 import { AuroraMap } from '../components/AuroraMap';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+import { useGeofencing } from '@/hooks/useGeofencing';
+import { CapsuleMarker } from '@/components/CapsuleMarker';
+import { capsuleService } from '@/services/capsuleService';
+import { Toaster, toast } from 'react-hot-toast';
 
 // Custom Neon Icon Definition
 const createCustomIcon = () => {
@@ -20,11 +23,6 @@ const createCustomIcon = () => {
         popupAnchor: [0, -16]
     });
 };
-
-import { useGeofencing } from '@/hooks/useGeofencing';
-import { CapsuleMarker } from '@/components/CapsuleMarker';
-import { capsuleService } from '@/services/capsuleService';
-import { Toaster, toast } from 'react-hot-toast'; // Assuming usage
 
 const LocationMarker = ({ onLocationSelected }) => {
     useMapEvents({

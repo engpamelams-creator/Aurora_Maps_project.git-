@@ -1,8 +1,24 @@
-pandas
-sqlalchemy
-psycopg2-binary
-plotly
-python-dotenv
-statsmodels
-scipy
-redis
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+requests==2.31.0
+
+# Scientific Stack
+numpy==1.26.4
+pandas==2.2.1
+scikit-learn==1.4.1
+
+# Computer Vision & Deep Learning (Warning: Heavy)
+# Installing CPU-only versions for lighter image build usually recommended for non-GPU dev
+torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
+transformers==4.39.3
+pillow==10.3.0
+timm==0.9.16
+
+# RAG & LLM Stack
+langchain==0.1.16
+langchain-community==0.0.33
+langchain-openai==0.1.3
+faiss-cpu==1.8.0
+tiktoken==0.6.0
+openai==1.17.0

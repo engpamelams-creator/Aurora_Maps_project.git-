@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker/backend.Dockerfile
     image: aurora-maps-backend
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    command: php -S 0.0.0.0:8000 -t public
     container_name: aurora-maps-backend
     restart: unless-stopped
     tty: true
@@ -57,6 +57,22 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - aurora-network
+
+  ai-service:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    image: aurora-maps-ai
+    container_name: aurora-maps-ai
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./ai-engine:/app
+    networks:
+      - aurora-network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
 
 networks:
   aurora-network:

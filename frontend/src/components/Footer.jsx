@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Map, Compass, Users, Calendar, Instagram, Linkedin, Github, Heart } from 'lucide-react';
+import { Map, Zap, Mail, Github, Twitter, Instagram, Compass, CheckCircle2, Activity, Users, Linkedin, Heart, Calendar } from 'lucide-react';
 
 export const Footer = () => {
     return (
@@ -38,8 +38,8 @@ export const Footer = () => {
                         </h3>
                         <ul className="space-y-3">
                             <li>
-                                <Link to="/feed" className="text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-2 text-sm group">
-                                    <Compass size={14} className="group-hover:translate-x-1 transition-transform" /> Geo-Feed
+                                <Link to="/pulse" className="text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-2 text-sm group">
+                                    <Activity size={14} className="group-hover:translate-x-1 transition-transform" /> Pulse
                                 </Link>
                             </li>
                             <li>
